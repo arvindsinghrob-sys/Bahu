@@ -1,0 +1,6 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VOVA Educational | Admin</title><link rel="stylesheet" href="/styles.css"></head>
+<body><main class="wrap"><header class="panel"><h1>VOVA Educational — Admin</h1><p class="muted">Authorized administrator access only.</p><a href="/">User Panel</a></header>
+<section id="loginBox" class="panel"><h2>Admin sign in</h2><label>Email</label><input id="email" type="email" autocomplete="username"><label>Password</label><input id="password" type="password" autocomplete="current-password"><button id="login">Sign in</button></section>
+<section id="dashboard" class="panel" hidden><h2>Orders</h2><button id="refresh">Refresh orders</button><button id="logout" class="secondary">Sign out</button><div id="orders"></div></section>
+<div id="message" class="message" aria-live="polite"></div></main><script type="module" src="/admin.js"></script></body></html>

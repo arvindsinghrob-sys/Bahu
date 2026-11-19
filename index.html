@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VOVA Educational | Demo Shop</title><link rel="stylesheet" href="/styles.css"></head>
+<body><main class="wrap">
+  <header class="panel"><h1>VOVA Educational</h1><p class="muted">Private educational shopping and sandbox checkout experiment.</p><p id="authState">Checking sign-in…</p><a href="/admin.html">Admin Panel</a></header>
+  <section id="authForms" class="panel" hidden><h2>Sign in / Create test account</h2><div class="grid"><div><label>Email</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com"></div><div><label>Password</label><input id="password" type="password" autocomplete="current-password" minlength="6" placeholder="At least 6 characters"></div></div><button id="login">Sign in</button><button id="register" class="secondary">Create account</button></section>
+  <section id="shop" class="panel" hidden><h2>Demo shop</h2><div class="notice"><b>Sandbox only:</b> no real payment is processed. This form does not ask for or store card numbers, CVV, expiry dates, or banking credentials. Choose a simulated result below.</div>
+    <form id="orderForm"><label>Your name</label><input id="customerName" required minlength="2" maxlength="80" placeholder="Your name">
+      <div class="grid"><div><label>Product</label><select id="product"><option value="notebook">Study Notebook — ₹99</option><option value="backpack">School Backpack — ₹599</option><option value="calculator">Basic Calculator — ₹249</option></select></div><div><label>Quantity (1–5)</label><input id="quantity" type="number" min="1" max="5" value="1" required></div></div>
+      <label>Simulated payment result</label><select id="paymentResult"><option value="approved">Demo approved</option><option value="declined">Demo declined</option></select>
+      <button type="submit">Place demo order</button></form><button id="logout" class="secondary" hidden>Sign out</button><div id="message" class="message" aria-live="polite"></div>
+  </section>
+  <footer class="muted">Educational demo only · Do not enter real payment credentials.</footer>
+</main><script type="module" src="/app.js"></script></body></html>
