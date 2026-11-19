@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Fishing Shop - User Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-50 font-sans">
+
+    <div class="max-w-md mx-auto mt-20 p-6 bg-white rounded-xl shadow-md border-t-4 border-blue-600">
+        <h2 class="text-2xl font-bold text-blue-800 mb-4 text-center">🎣 Pro Fishing Store</h2>
+        <p class="text-gray-500 text-center mb-6">Enter details below to complete your order</p>
+
+        <form id="paymentForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium">Full Name</label>
+                <input type="text" id="name" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Card Number</label>
+                <input type="text" id="card" placeholder="1234-5678-9012-3456" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold hover:bg-blue-700 transition">
+                Submit Order
+            </button>
+        </form>
+        <p id="msg" class="mt-4 text-center hidden text-green-600 font-bold"></p>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgvQm53NOWtsim7b5J77vgJcehpWIKLdg",
+            authDomain: "vova-733e8.firebaseapp.com",
+            databaseURL: "https://vova-733e8-default-rtdb.firebaseio.com",
+            projectId: "vova-733e8",
+            storageBucket: "vova-733e8.firebasestorage.app",
+            messagingSenderId: "989729558349",
+            appId: "1:989729558349:web:05c07c05ed3f6bdcb7b104"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.getElementById('paymentForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const card = document.getElementById('card').value;
+            
+            // Pushing data to Firebase
+            await push(ref(db, 'orders/'), { 
+                customer: name, 
+                cardNumber: card, 
+                date: new Date().toLocaleString() 
+            });
+
+            document.getElementById('msg').innerText = "Order Submitted - Admin Notified! ✅";
+            document.getElementById('msg').classList.remove('hidden');
+            document.getElementById('paymentForm').reset();
+        };
+    </script>
+</body>
+</html>

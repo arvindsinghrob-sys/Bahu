@@ -1,0 +1,14 @@
+{
+  "name": "telegram-firebase-bot",
+  "version": "1.0.0",
+  "description": "Backend server for Telegram bot and Firebase",
+  "main": "admin.js",
+  "scripts": {
+    "start": "node admin.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "firebase-admin": "^11.11.0",
+    "node-telegram-bot-api": "^0.61.0"
+  }
+}
